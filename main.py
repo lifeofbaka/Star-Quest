@@ -31,6 +31,7 @@ class Player:
         self.y = int(y)
         self.rect = pg.Rect(self.x, self.y, TILESIZE, TILESIZE)
         self.color = WHITE
+        self.color1 = BLACK
         self.key_pressed = pg.key.get_pressed()
 
 
@@ -59,8 +60,14 @@ player = Player(Width / 2, Height / 2)
 
 def TestRoom1(): # Test Room 1
     background = pg.Rect(4 * TILESIZE, 4 * TILESIZE, 16 * TILESIZE, 12 * TILESIZE)
+    Wall = pg.Rect(4 * TILESIZE, 4 * TILESIZE, 16 * TILESIZE, 3 * TILESIZE)
+    bed = pg.Rect(4 * TILESIZE, 9 * TILESIZE, 2 * TILESIZE, 3 * TILESIZE)
+    door = pg.Rect((11 * TILESIZE, 6 * TILESIZE, 2 * TILESIZE, 1 * TILESIZE))
+    computer = pg.Rect((11 * TILESIZE, 4 * TILESIZE, 2 * TILESIZE, 1 * TILESIZE))
     pg.draw.rect(WINDOW, GREY, background)
-
+    pg.draw.rect(WINDOW, WHITE, Wall)
+    pg.draw.rect(WINDOW, BLACK, bed)
+    pg.draw.rect(WINDOW, BLACK, door)
     # Main Function
 def main():
     clock = pg.time.Clock()
