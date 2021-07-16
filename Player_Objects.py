@@ -1,7 +1,11 @@
+import time
+import timeit
+from collections import Counter
+
 import pygame as pg
-import getch
 from main import *
 from Values import *
+from Boxes import *
 
 frame = 0
 
@@ -14,6 +18,7 @@ class Player:
         self.color = WHITE
         self.color1 = BLACK
         self.key_pressed = pg.key.get_pressed()
+        self.frame = 0
         self.player_left = False
         self.player_right = False
         self.player_up = False
@@ -22,9 +27,12 @@ class Player:
         self.face_right = False
         self.face_up = False
         self. face_down = True
+        self.Title_Viewed = 0
 
     def draw(self, WINDOW):
-        global frame
+        #global frame
+        global player_up_walk
+        global player_right_walk
         # Player png imports
         player_left_walk = [pg.image.load(os.path.join('Art', 'Player_left_2.png')),
                             pg.image.load(os.path.join('Art', 'Player_left_1.png'))]
@@ -37,32 +45,35 @@ class Player:
                           pg.image.load(os.path.join('Art', 'Player_up_2.png')),
                           pg.image.load(os.path.join('Art', 'Player_up_3.png'))]
         # pg.draw.rect(WINDOW, self.color, self.rect)
-        if frame + 1 >= 60:
-            frame = 0
+        if self.frame + 1 >= 60:
+            self.frame = 0
         if self.player_left:  # If we are facing left
-            WINDOW.blit(player_left_walk[(frame // 1) % len(player_left_walk)], (self.x, self.y))
-            frame += 1
+            WINDOW.blit(player_left_walk[(self.frame // 1) % len(player_left_walk)], (self.x, self.y))
+            self.frame += 1
         elif self.player_right:
-            WINDOW.blit(player_right_walk[frame // 1 % len(player_right_walk)], (self.x, self.y))
-            frame += 1
+            WINDOW.blit(player_right_walk[self.frame // 1 % len(player_right_walk)], (self.x, self.y))
+            self.frame += 1
         elif self.player_down:
-            WINDOW.blit(player_down_walk[frame // 1 % len(player_down_walk)], (self.x, self.y))
-            frame += 1
+            WINDOW.blit(player_down_walk[self.frame // 1 % len(player_down_walk)], (self.x, self.y))
+            self.frame += 1
         elif self.player_up:
-            WINDOW.blit(player_up_walk[frame // 1 % len(player_up_walk)], (self.x, self.y))
-            frame += 1
+            WINDOW.blit(player_up_walk[self.frame // 1 % len(player_up_walk)], (self.x, self.y))
+            self.frame += 1
         else:
-            if self.face_left == True:
+            if self.face_left:
                 WINDOW.blit(player_left_walk[1], (self.x, self.y))
-            elif self.face_right == True:
+            elif self.face_right:
                 WINDOW.blit(player_right_walk[0], (self.x, self.y))
-            elif self.face_up == True:
+            elif self.face_up:
                 WINDOW.blit(player_up_walk[1], (self.x, self.y))
             else:
                 WINDOW.blit(player_down_walk[1], (self.x, self.y))
 
+        if self.x <= 8 * TILESIZE and self.Title_Viewed == 0 and self.key_pressed[pg.K_LEFT]:
+            self.face_left, self.face_right, self.face_down, self.face_up = False, False, False, True
+
     def movement_and_walk_animation(self):
-        global frame
+
         self.key_pressed = pg.key.get_pressed()
         if self.key_pressed[pg.K_LEFT] and not self.key_pressed[pg.K_UP] and not self.key_pressed[pg.K_DOWN]:
             self.x -= Vel
@@ -96,12 +107,88 @@ class Player:
             self.player_right = False
             self.player_up = False
             self.player_down = False
-            frame = 0
+            self.frame = 0
 
         self.rect = pg.Rect(self.x, self.y, TILESIZE, TILESIZE)
 
-    #location
-    def location(self):
-        return ((self.x, self.y))
+        '''#Room Boundaries'''
+    def location_my_room(self):
 
-player = Player(Width / 2, Height / 2)
+        if self.x - Vel <= 3 * TILESIZE and self.key_pressed[pg.K_LEFT]:
+            self.player_left = False
+            self.x = 4 * TILESIZE
+        if self.x + Vel >= 20 * TILESIZE and self.key_pressed[pg.K_RIGHT]:
+            self.player_right = False
+            self.x = 19 * TILESIZE
+        if self.y - Vel >= 15 * TILESIZE and self.key_pressed[pg.K_DOWN]:
+            self.player_down = False
+            self.y = 15 * TILESIZE
+        if self.y + Vel <= 7 * TILESIZE and self.key_pressed[pg.K_UP]:
+            self.player_up = False
+            self.y = 7 * TILESIZE
+        '''#object Boundaries'''
+        '''#Bed'''
+        if self.x == 4 * TILESIZE:
+            if self.y - Vel == 9 * TILESIZE and self.key_pressed[pg.K_DOWN]:
+                self.player_down = False
+                self.y = 9 * TILESIZE
+            if self.y - Vel == 10 * TILESIZE and self.key_pressed[pg.K_DOWN]:
+                self.player_down = False
+                self.y = 10 * TILESIZE
+            if self.y + Vel == 10 * TILESIZE and self.key_pressed[pg.K_UP]:
+                self.player_up = False
+                self.y = 10 * TILESIZE
+            if self.y + Vel == 12 * TILESIZE and self.key_pressed[pg.K_UP]:
+                self.player_up = False
+                self.y = 12 * TILESIZE
+        if self.y == 11 * TILESIZE:
+            if self.x - Vel <= 5 * TILESIZE and self.key_pressed[pg.K_LEFT]:
+                self.player_left = False
+                self. x = 5 * TILESIZE
+
+        '''#Desk'''
+        if self.x == 15 * TILESIZE or self.x == 16 * TILESIZE:
+            if self.y + Vel <= 8 * TILESIZE and self.key_pressed[pg.K_UP]:
+                self.player_up = False
+                self.y = 8 * TILESIZE
+
+        if self.y <= 7 * TILESIZE:
+            if self.x + Vel >= 15 * TILESIZE and self.x + Vel <= 16 * TILESIZE and self.key_pressed[pg.K_RIGHT]:
+                self.player_right = False
+                self.x = 14 * TILESIZE
+            if self.x - Vel <= 16 * TILESIZE and self.x - Vel >= 15 * TILESIZE and self.key_pressed[pg.K_LEFT]:
+                self.player_left = False
+                self.x = 17 * TILESIZE
+
+        '''#StarQuest popup and animation sequence of character''' #Needs time delay
+    def StartQuest_Title(self):
+        if self.key_pressed[pg.K_RETURN] and self.x == 8 * TILESIZE:
+            self.Title_Viewed = 1
+        if self.Title_Viewed == 0 and self.x == 8 * TILESIZE:
+            if self.face_right:
+                self.face_right = True
+                self.face_right, self.face_up = False, True
+            elif self.face_up and self.y != 7 * TILESIZE:
+                self.player_up = True
+                self.y -= Vel
+                time.sleep(0.15)
+            elif self.y == 7 * TILESIZE:
+                Title_Box()
+            else:
+                WINDOW.blit(player_up_walk[1], (self.x, self.y))
+
+        if self.Title_Viewed == 1:
+            print (True)
+        else:
+            print (False)
+
+
+
+
+
+
+
+
+
+
+player = Player(4 * TILESIZE, 10 * TILESIZE)

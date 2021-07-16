@@ -3,8 +3,10 @@ import os, sys, time
 from Player_Objects import *
 from Values import *
 from Rooms import *
+from Music import *
 
 pg.init()
+pg.mixer.init()
 # Create icon for game
 icon = pg.image.load('Art/icon.png')
 pg.display.set_icon(icon)
@@ -30,13 +32,15 @@ def main():
             if event.type == pg.QUIT:
                 run = False
 
-
+        #My_Room_Music()
         WINDOW.fill(BLACK)
-        #draw_grid()
+        draw_grid()
         My_Room()
         #WINDOW.fill(WHITE)
         player.movement_and_walk_animation()
+        player.location_my_room()
         player.draw(WINDOW)
+        player.StartQuest_Title()
         pg.display.update()
 
 

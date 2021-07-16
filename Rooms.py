@@ -1,3 +1,4 @@
+import os
 import time
 
 from main import *
@@ -20,8 +21,3 @@ def My_Room():  # Test Room 1
     # pg.draw.rect(WINDOW, BLACK, bed)
     # pg.draw.rect(WINDOW, BLACK, door)
     WINDOW.blit(My_Room_Sprite, background)
-
-
-def next_room():
-    if player.location() == pg.Rect((11 * TILESIZE, 6 * TILESIZE, 2 * TILESIZE, 1 * TILESIZE)):
-        WINDOW.fill(WHITE)
