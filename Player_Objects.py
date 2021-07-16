@@ -165,6 +165,8 @@ class Player:
         if self.key_pressed[pg.K_RETURN] and self.x == 8 * TILESIZE:
             self.Title_Viewed = 1
         if self.Title_Viewed == 0 and self.x == 8 * TILESIZE:
+            if self.key_pressed[pg.K_RIGHT] and self.x == 8 *TILESIZE:
+                self.player_right = False
             if self.face_right:
                 self.face_right = True
                 self.face_right, self.face_up = False, True
@@ -174,21 +176,5 @@ class Player:
                 time.sleep(0.15)
             elif self.y == 7 * TILESIZE:
                 Title_Box()
-            else:
-                WINDOW.blit(player_up_walk[1], (self.x, self.y))
-
-        if self.Title_Viewed == 1:
-            print (True)
-        else:
-            print (False)
-
-
-
-
-
-
-
-
-
 
 player = Player(4 * TILESIZE, 10 * TILESIZE)

@@ -39,6 +39,7 @@ def main():
         #WINDOW.fill(WHITE)
         player.movement_and_walk_animation()
         player.location_my_room()
+        player.StartQuest_Title()
         player.draw(WINDOW)
         player.StartQuest_Title()
         pg.display.update()
