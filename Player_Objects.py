@@ -1,8 +1,5 @@
-import time
-import timeit
-from collections import Counter
-
 import pygame as pg
+import time
 from main import *
 from Values import *
 from Boxes import *
@@ -18,7 +15,7 @@ class Player:
         self.color = WHITE
         self.color1 = BLACK
         self.key_pressed = pg.key.get_pressed()
-        self.frame = 0
+        self.moves_disabled = False
         self.player_left = False
         self.player_right = False
         self.player_up = False
@@ -26,11 +23,13 @@ class Player:
         self.face_left = False
         self.face_right = False
         self.face_up = False
-        self. face_down = True
+        self.face_down = True
+        self.frame = 0
         self.Title_Viewed = 0
+        self.Time_Elapsed = 0
 
     def draw(self, WINDOW):
-        #global frame
+        # global frame
         global player_up_walk
         global player_right_walk
         # Player png imports
@@ -69,49 +68,50 @@ class Player:
             else:
                 WINDOW.blit(player_down_walk[1], (self.x, self.y))
 
-        if self.x <= 8 * TILESIZE and self.Title_Viewed == 0 and self.key_pressed[pg.K_LEFT]:
-            self.face_left, self.face_right, self.face_down, self.face_up = False, False, False, True
-
     def movement_and_walk_animation(self):
 
         self.key_pressed = pg.key.get_pressed()
-        if self.key_pressed[pg.K_LEFT] and not self.key_pressed[pg.K_UP] and not self.key_pressed[pg.K_DOWN]:
-            self.x -= Vel
-            self.player_left = True
-            self.face_left, self.face_right, self.face_down, self.face_up = True, False, False, False
-            self.player_right, self.player_up, self.player_down = False, False, False
-            time.sleep(0.15)
+        if self.moves_disabled == False:
+            if self.key_pressed[pg.K_LEFT] and not self.key_pressed[pg.K_UP] and not self.key_pressed[pg.K_DOWN]:
+                self.x -= Vel
+                self.player_left = True
+                self.face_left, self.face_right, self.face_down, self.face_up = True, False, False, False
+                self.player_right, self.player_up, self.player_down = False, False, False
+                time.sleep(0.15)
 
-        elif self.key_pressed[pg.K_RIGHT] and not self.key_pressed[pg.K_UP] and not self.key_pressed[pg.K_DOWN]:
-            self.x += Vel
-            self.player_right = True
-            self.face_right = True
-            self.face_left, self.face_right, self.face_down, self.face_up = False, True, False, False
-            self.player_left, self.player_up, self.player_down = False, False, False
-            time.sleep(0.15)
+            elif self.key_pressed[pg.K_RIGHT] and not self.key_pressed[pg.K_UP] and not self.key_pressed[pg.K_DOWN]:
+                self.x += Vel
+                self.player_right = True
+                self.face_right = True
+                self.face_left, self.face_right, self.face_down, self.face_up = False, True, False, False
+                self.player_left, self.player_up, self.player_down = False, False, False
+                time.sleep(0.15)
 
-        elif self.key_pressed[pg.K_UP] and not self.key_pressed[pg.K_LEFT] and not self.key_pressed[pg.K_RIGHT]:
-            self.y -= Vel
-            self.player_up = True
-            self.face_left, self.face_right, self.face_down, self.face_up = False, False, False, True
-            self.player_left, self.player_right, self.player_down = False, False, False
-            time.sleep(0.15)
-        elif self.key_pressed[pg.K_DOWN] and not self.key_pressed[pg.K_LEFT] and not self.key_pressed[pg.K_RIGHT]:
-            self.y += Vel
-            self.player_down = True
-            self.face_left, self.face_right, self.face_down, self.face_up = False, False, True, False
-            self.player_left, self.player_right, self.player_up = False, False, False
-            time.sleep(0.15)
+            elif self.key_pressed[pg.K_UP] and not self.key_pressed[pg.K_LEFT] and not self.key_pressed[pg.K_RIGHT]:
+                self.y -= Vel
+                self.player_up = True
+                self.face_left, self.face_right, self.face_down, self.face_up = False, False, False, True
+                self.player_left, self.player_right, self.player_down = False, False, False
+                time.sleep(0.15)
+            elif self.key_pressed[pg.K_DOWN] and not self.key_pressed[pg.K_LEFT] and not self.key_pressed[pg.K_RIGHT]:
+                self.y += Vel
+                self.player_down = True
+                self.face_left, self.face_right, self.face_down, self.face_up = False, False, True, False
+                self.player_left, self.player_right, self.player_up = False, False, False
+                time.sleep(0.15)
+            else:
+                self.player_left = False
+                self.player_right = False
+                self.player_up = False
+                self.player_down = False
+                self.frame = 0
         else:
-            self.player_left = False
-            self.player_right = False
-            self.player_up = False
-            self.player_down = False
-            self.frame = 0
+            self.moves_disabled == True
 
         self.rect = pg.Rect(self.x, self.y, TILESIZE, TILESIZE)
 
         '''#Room Boundaries'''
+
     def location_my_room(self):
 
         if self.x - Vel <= 3 * TILESIZE and self.key_pressed[pg.K_LEFT]:
@@ -126,6 +126,7 @@ class Player:
         if self.y + Vel <= 7 * TILESIZE and self.key_pressed[pg.K_UP]:
             self.player_up = False
             self.y = 7 * TILESIZE
+
         '''#object Boundaries'''
         '''#Bed'''
         if self.x == 4 * TILESIZE:
@@ -144,7 +145,7 @@ class Player:
         if self.y == 11 * TILESIZE:
             if self.x - Vel <= 5 * TILESIZE and self.key_pressed[pg.K_LEFT]:
                 self.player_left = False
-                self. x = 5 * TILESIZE
+                self.x = 5 * TILESIZE
 
         '''#Desk'''
         if self.x == 15 * TILESIZE or self.x == 16 * TILESIZE:
@@ -160,21 +161,37 @@ class Player:
                 self.player_left = False
                 self.x = 17 * TILESIZE
 
-        '''#StarQuest popup and animation sequence of character''' #Needs time delay
+        '''#StarQuest popup and animation sequence of character'''  # Needs time delay
+
     def StartQuest_Title(self):
         if self.key_pressed[pg.K_RETURN] and self.x == 8 * TILESIZE:
             self.Title_Viewed = 1
-        if self.Title_Viewed == 0 and self.x == 8 * TILESIZE:
-            if self.key_pressed[pg.K_RIGHT] and self.x == 8 *TILESIZE:
-                self.player_right = False
-            if self.face_right:
-                self.face_right = True
-                self.face_right, self.face_up = False, True
-            elif self.face_up and self.y != 7 * TILESIZE:
-                self.player_up = True
-                self.y -= Vel
-                time.sleep(0.15)
+            self.Time_Elapsed = 0
+            self.moves_disabled = False
+        if self.x == 8 * TILESIZE and self.Title_Viewed == 0:
+            self.moves_disabled = True
+            if self.face_up and self.y != 7 * TILESIZE:
+                time_to_walk = 40
+                if self.Time_Elapsed > time_to_walk:
+                    self.y -= Vel
+                    self.player_up = True
+                    self.Time_Elapsed = 0
+                else:
+                    self.Time_Elapsed += 1
             elif self.y == 7 * TILESIZE:
-                Title_Box()
+                self.player_up = False
+                time_to_play = 120
+                if self.Time_Elapsed > time_to_play:
+                    Title_Box()
+                else:
+                    self.Time_Elapsed += 1
+        if self.moves_disabled and self.Title_Viewed == 0 and self.y != 7 * TILESIZE:
+            time_to_face = 60
+            self.player_up, self.player_down, self.player_left, self.player_right = False, False, False, False
+            if self.Time_Elapsed > time_to_face:
+                self.face_up, self.face_down, self.face_left, self.face_right = True, False, False, False
+            else:
+                self.Time_Elapsed += 1
+
 
 player = Player(4 * TILESIZE, 10 * TILESIZE)

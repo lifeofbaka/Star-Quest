@@ -9,3 +9,4 @@ BLACK = (0,0,0)
 GREY = (160, 160, 160)
 TILESIZE = 32
 WINDOW = pg.display.set_mode((Width,Height))
+clock = pg.time.Clock()

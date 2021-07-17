@@ -23,7 +23,7 @@ def draw_grid():
 
          # Main Function
 def main():
-    clock = pg.time.Clock()
+
     run = True
 
     while run:
@@ -32,6 +32,7 @@ def main():
             if event.type == pg.QUIT:
                 run = False
 
+    #'''Waking up in my room'''
         #My_Room_Music()
         WINDOW.fill(BLACK)
         draw_grid()
@@ -42,6 +43,7 @@ def main():
         player.StartQuest_Title()
         player.draw(WINDOW)
         player.StartQuest_Title()
+        text_box_background()
         pg.display.update()
 
 
