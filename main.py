@@ -6,6 +6,7 @@ from Rooms import *
 from Music import *
 
 pg.init()
+pg.font.init()
 pg.mixer.init()
 # Create icon for game
 icon = pg.image.load('Art/icon.png')
@@ -40,10 +41,9 @@ def main():
         #WINDOW.fill(WHITE)
         player.movement_and_walk_animation()
         player.location_my_room()
-        player.StartQuest_Title()
         player.draw(WINDOW)
+        player.game_text_boxes()
         player.StartQuest_Title()
-        text_box_background()
         pg.display.update()
 
 

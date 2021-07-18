@@ -26,6 +26,7 @@ class Player:
         self.face_down = True
         self.frame = 0
         self.Title_Viewed = 0
+        self.Box_Viewed = 0
         self.Time_Elapsed = 0
 
     def draw(self, WINDOW):
@@ -100,10 +101,7 @@ class Player:
                 self.player_left, self.player_right, self.player_up = False, False, False
                 time.sleep(0.15)
             else:
-                self.player_left = False
-                self.player_right = False
-                self.player_up = False
-                self.player_down = False
+                self.player_left, self.player_right, self.player_up, self.player_down = False, False, False, False
                 self.frame = 0
         else:
             self.moves_disabled == True
@@ -130,9 +128,15 @@ class Player:
         '''#object Boundaries'''
         '''#Bed'''
         if self.x == 4 * TILESIZE:
-            if self.y - Vel == 9 * TILESIZE and self.key_pressed[pg.K_DOWN]:
-                self.player_down = False
-                self.y = 9 * TILESIZE
+            if self.moves_disabled == True:
+                if self.y + Vel == 9 * TILESIZE and self.key_pressed[pg.K_DOWN]:
+                    self.player_down = False
+                    self.y = 9 * TILESIZE
+            elif self.moves_disabled == False:
+                if self.y - Vel == 9 * TILESIZE and self.key_pressed[pg.K_DOWN]:
+                    self.player_down = False
+                    self.y = 9 * TILESIZE
+
             if self.y - Vel == 10 * TILESIZE and self.key_pressed[pg.K_DOWN]:
                 self.player_down = False
                 self.y = 10 * TILESIZE
@@ -168,7 +172,7 @@ class Player:
             self.Title_Viewed = 1
             self.Time_Elapsed = 0
             self.moves_disabled = False
-        if self.x == 8 * TILESIZE and self.Title_Viewed == 0:
+        if self.x == 8 * TILESIZE and self.Title_Viewed == 0 and self.Box_Viewed == 1:
             self.moves_disabled = True
             if self.face_up and self.y != 7 * TILESIZE:
                 time_to_walk = 40
@@ -185,13 +189,27 @@ class Player:
                     Title_Box()
                 else:
                     self.Time_Elapsed += 1
-        if self.moves_disabled and self.Title_Viewed == 0 and self.y != 7 * TILESIZE:
-            time_to_face = 60
-            self.player_up, self.player_down, self.player_left, self.player_right = False, False, False, False
-            if self.Time_Elapsed > time_to_face:
-                self.face_up, self.face_down, self.face_left, self.face_right = True, False, False, False
+            if self.moves_disabled and self.Title_Viewed == 0 and self.y != 7 * TILESIZE:
+                time_to_face = 60
+                self.player_up, self.player_down, self.player_left, self.player_right = False, False, False, False
+                if self.Time_Elapsed > time_to_face:
+                    self.face_up, self.face_down, self.face_left, self.face_right = True, False, False, False
+                else:
+                    self.Time_Elapsed += 1
+
+
+    def game_text_boxes(self):
+        if self.key_pressed[pg.K_RETURN] and Player(4 * TILESIZE, 10 * TILESIZE):
+            self.moves_disabled = False
+            self.Box_Viewed = 1
+            self.Time_Elapsed = 0
+        if Player(4 * TILESIZE, 10 * TILESIZE) and self.Box_Viewed == 0:
+            self.moves_disabled = True
+            time_to_play = 90
+            if self.Time_Elapsed > time_to_play:
+                text_box_1()
             else:
                 self.Time_Elapsed += 1
 
-
 player = Player(4 * TILESIZE, 10 * TILESIZE)
+
