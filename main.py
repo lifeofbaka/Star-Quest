@@ -34,16 +34,16 @@ def main():
                 run = False
 
     #'''Waking up in my room'''
-        #My_Room_Music()
-        WINDOW.fill(BLACK)
+        # My_Room_Music()
+        #WINDOW.fill(BLACK)
         draw_grid()
         My_Room()
         #WINDOW.fill(WHITE)
         player.movement_and_walk_animation()
         player.location_my_room()
         player.draw(WINDOW)
-        player.game_text_boxes()
         player.StartQuest_Title()
+        player.game_text_boxes()
         pg.display.update()
 
 

@@ -168,12 +168,15 @@ class Player:
         '''#StarQuest popup and animation sequence of character'''  # Needs time delay
 
     def StartQuest_Title(self):
-        if self.key_pressed[pg.K_RETURN] and self.x == 8 * TILESIZE:
-            self.Title_Viewed = 1
-            self.Time_Elapsed = 0
-            self.moves_disabled = False
-        if self.x == 8 * TILESIZE and self.Title_Viewed == 0 and self.Box_Viewed == 1:
+        if self.x == 8 * TILESIZE and self.Title_Viewed == 0:
             self.moves_disabled = True
+            if self.moves_disabled and self.y != 7 * TILESIZE:
+                time_to_face = 30
+                self.player_up, self.player_down, self.player_left, self.player_right = False, False, False, False
+                if self.Time_Elapsed > time_to_face:
+                    self.face_up, self.face_down, self.face_left, self.face_right = True, False, False, False
+                else:
+                    self.Time_Elapsed += 1
             if self.face_up and self.y != 7 * TILESIZE:
                 time_to_walk = 40
                 if self.Time_Elapsed > time_to_walk:
@@ -184,26 +187,30 @@ class Player:
                     self.Time_Elapsed += 1
             elif self.y == 7 * TILESIZE:
                 self.player_up = False
-                time_to_play = 120
-                if self.Time_Elapsed > time_to_play:
-                    Title_Box()
-                else:
-                    self.Time_Elapsed += 1
-            if self.moves_disabled and self.Title_Viewed == 0 and self.y != 7 * TILESIZE:
-                time_to_face = 60
-                self.player_up, self.player_down, self.player_left, self.player_right = False, False, False, False
-                if self.Time_Elapsed > time_to_face:
-                    self.face_up, self.face_down, self.face_left, self.face_right = True, False, False, False
-                else:
-                    self.Time_Elapsed += 1
-
 
     def game_text_boxes(self):
-        if self.key_pressed[pg.K_RETURN] and Player(4 * TILESIZE, 10 * TILESIZE):
+        # First box
+        if self.Box_Viewed == 0 and self.key_pressed[pg.K_RETURN] and self.x == 4 * TILESIZE and self.y == 10 * TILESIZE:
             self.moves_disabled = False
             self.Box_Viewed = 1
             self.Time_Elapsed = 0
-        if Player(4 * TILESIZE, 10 * TILESIZE) and self.Box_Viewed == 0:
+
+        if self.Box_Viewed == 1 and self.key_pressed[pg.K_RETURN] and self.x == 8 * TILESIZE and self.y == 7 * TILESIZE:
+            self.moves_disabled = False
+            self.Box_Viewed = 2
+            self.Time_Elapsed = 0
+
+        if self.Title_Viewed == 1:
+            self.Time_Elapsed = 0
+            self.moves_disabled = False
+
+        if self.Box_Viewed == 2 and self.key_pressed[pg.K_RETURN] and self.x == 15 * TILESIZE and self.y == 8 * TILESIZE:
+            self.moves_disabled = False
+            self.Box_Viewed = 3
+            self.Time_Elapsed = 0
+
+        if self.x == 4 * TILESIZE and self.y == 10 * TILESIZE and self.Box_Viewed == 0:
+
             self.moves_disabled = True
             time_to_play = 90
             if self.Time_Elapsed > time_to_play:
@@ -211,5 +218,43 @@ class Player:
             else:
                 self.Time_Elapsed += 1
 
+        if self.x == 8 * TILESIZE and self.y == 7 * TILESIZE and self.Box_Viewed == 1:
+            time_to_play = 30
+            if self.Time_Elapsed > time_to_play:
+                text_box_2()
+            else:
+                self.Time_Elapsed += 1
+
+        if self.x == 8 * TILESIZE and self.y == 7 * TILESIZE and self.Box_Viewed == 2 and self.Title_Viewed == 0:
+            time_to_play = 60
+            if self.Time_Elapsed > time_to_play and self.Title_Viewed == 0:
+                Title_Box()
+                if self.key_pressed[pg.K_RETURN]:
+                    self.Title_Viewed = 1
+            else:
+                self.Time_Elapsed += 1
+
+        if self.x == 15 * TILESIZE and self.y == 8 * TILESIZE and self.Box_Viewed == 2:
+            self.moves_disabled = True
+            self.player_up,self.player_down, self.player_right, self.player_left = False, False, False, False
+            self.face_up = True
+            time_to_play = 30
+            self.Time_Elapsed += 1
+
+        if (self.x == 11 * TILESIZE or self.x == 12 * TILESIZE) and self.y == 15 * TILESIZE and self.Box_Viewed != 3:
+            time_to_play = 30
+            if self.Time_Elapsed > time_to_play:
+                print ('Maybe you should look around more')
+            else:
+                self.Time_Elapsed += 1
+
+
+        print (self.Time_Elapsed)
+        #print (self.x /32 , self.y /32)
+
+    # x = 15 y = 8
+
+
 player = Player(4 * TILESIZE, 10 * TILESIZE)
+
 
