@@ -26,6 +26,7 @@ class Player:
         self.face_down = True
         self.frame = 0
         self.Title_Viewed = 0
+        self.looked_around = False
         self.Box_Viewed = 0
         self.Time_Elapsed = 0
 
@@ -194,23 +195,19 @@ class Player:
             self.moves_disabled = False
             self.Box_Viewed = 1
             self.Time_Elapsed = 0
-
-        if self.Box_Viewed == 1 and self.key_pressed[pg.K_RETURN] and self.x == 8 * TILESIZE and self.y == 7 * TILESIZE:
+        elif self.Box_Viewed == 1 and self.key_pressed[pg.K_RETURN] and self.x == 8 * TILESIZE and self.y == 7 * TILESIZE:
             self.moves_disabled = False
             self.Box_Viewed = 2
             self.Time_Elapsed = 0
-
-        if self.Title_Viewed == 1:
-            self.Time_Elapsed = 0
-            self.moves_disabled = False
-
-        if self.Box_Viewed == 2 and self.key_pressed[pg.K_RETURN] and self.x == 15 * TILESIZE and self.y == 8 * TILESIZE:
+        elif self.Box_Viewed == 2 and self.key_pressed[pg.K_RETURN] and self.x == 15 * TILESIZE and self.y == 8 * TILESIZE:
             self.moves_disabled = False
             self.Box_Viewed = 3
             self.Time_Elapsed = 0
 
-        if self.x == 4 * TILESIZE and self.y == 10 * TILESIZE and self.Box_Viewed == 0:
+        if (self.x != 11 * TILESIZE or self.x != 12 * TILESIZE) and self.y != 15 * TILESIZE and self.Box_Viewed != 3:
+            self.looked_around = False
 
+        if self.x == 4 * TILESIZE and self.y == 10 * TILESIZE and self.Box_Viewed == 0:
             self.moves_disabled = True
             time_to_play = 90
             if self.Time_Elapsed > time_to_play:
@@ -218,35 +215,50 @@ class Player:
             else:
                 self.Time_Elapsed += 1
 
-        if self.x == 8 * TILESIZE and self.y == 7 * TILESIZE and self.Box_Viewed == 1:
+        elif self.x == 8 * TILESIZE and self.y == 7 * TILESIZE and self.Box_Viewed == 1:
             time_to_play = 30
             if self.Time_Elapsed > time_to_play:
                 text_box_2()
             else:
                 self.Time_Elapsed += 1
 
-        if self.x == 8 * TILESIZE and self.y == 7 * TILESIZE and self.Box_Viewed == 2 and self.Title_Viewed == 0:
+        elif self.x == 8 * TILESIZE and self.y == 7 * TILESIZE and self.Box_Viewed == 2 and self.Title_Viewed == 0:
             time_to_play = 60
             if self.Time_Elapsed > time_to_play and self.Title_Viewed == 0:
                 Title_Box()
                 if self.key_pressed[pg.K_RETURN]:
                     self.Title_Viewed = 1
+                    self.Time_Elapsed = 0
+                    self.moves_disabled = False
             else:
                 self.Time_Elapsed += 1
 
-        if self.x == 15 * TILESIZE and self.y == 8 * TILESIZE and self.Box_Viewed == 2:
+        elif self.x == 15 * TILESIZE and self.y == 8 * TILESIZE and self.Box_Viewed == 2:
             self.moves_disabled = True
             self.player_up,self.player_down, self.player_right, self.player_left = False, False, False, False
             self.face_up = True
             time_to_play = 30
-            self.Time_Elapsed += 1
-
-        if (self.x == 11 * TILESIZE or self.x == 12 * TILESIZE) and self.y == 15 * TILESIZE and self.Box_Viewed != 3:
-            time_to_play = 30
+            time_to_next = 60
             if self.Time_Elapsed > time_to_play:
-                print ('Maybe you should look around more')
+                photo_of_alice()
+                if self.Time_Elapsed > time_to_next:
+                    text_box_3()
+                else: self.Time_Elapsed += 1
             else:
                 self.Time_Elapsed += 1
+
+        elif (self.x == 11 * TILESIZE or self.x == 12 * TILESIZE) and self.y == 15 * TILESIZE and self.Box_Viewed != 3:
+            time_to_play = 15
+            if self.looked_around == False:
+                self.moves_disabled = True
+                if self.Time_Elapsed > time_to_play:
+                    Look_around_more()
+                    if self.key_pressed[pg.K_RETURN]:
+                        self.moves_disabled = False
+                        self.looked_around = True
+                        self.Time_Elapsed = 0
+                else:
+                    self.Time_Elapsed = self.Time_Elapsed + 1
 
 
         print (self.Time_Elapsed)
