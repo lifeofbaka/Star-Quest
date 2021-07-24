@@ -3,7 +3,7 @@ import time
 from main import *
 from Values import *
 from Boxes import *
-from Player_Objects import thehero
+from Player_Objects import *
 
 
 class NPC:
@@ -27,7 +27,7 @@ class NPC:
         pg.draw.rect(WINDOW, WHITE, self.rect)
 
     def animations(self):
-        if thehero.In_room1 == self.In_room_2:
+        #if player.In_room2 == self.In_room_2:
             print ('yes yes yes')
 
 
