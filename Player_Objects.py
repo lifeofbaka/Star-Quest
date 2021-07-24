@@ -37,17 +37,22 @@ class Player:
         global player_up_walk
         global player_right_walk
         global player_left_walk
+
         # Player png imports
         player_left_walk = [pg.image.load(os.path.join('Art', 'Player_left_2.png')),
                             pg.image.load(os.path.join('Art', 'Player_left_1.png'))]
+
         player_right_walk = [pg.image.load(os.path.join('Art', 'Player_right_1.png')),
                              pg.transform.flip(player_left_walk[0], True, False)]
+
         player_down_walk = [pg.image.load(os.path.join('Art', 'Player_down_1.png')),
                             pg.image.load(os.path.join('Art', 'idle.png')),
                             pg.image.load(os.path.join('Art', 'Player_down_3.png'))]
+
         player_up_walk = [pg.image.load(os.path.join('Art', 'Player_up_1.png')),
                           pg.image.load(os.path.join('Art', 'Player_up_2.png')),
                           pg.image.load(os.path.join('Art', 'Player_up_3.png'))]
+
         # pg.draw.rect(WINDOW, self.color, self.rect)
         if self.frame + 1 >= 60:
             self.frame = 0
@@ -385,7 +390,6 @@ class Player:
             return True
 
     def moving_rooms(self):
-
         # Room 1
         if self.In_room1:
             self.In_room2 = False
@@ -429,7 +433,9 @@ class Player:
 
         print(self.Unavailable_Room_Viewed)
         print(self.x // TILESIZE, self.y // TILESIZE)
-player = Player(4 * TILESIZE, 10 * TILESIZE)
+
+
+thehero = Player(4 * TILESIZE, 10 * TILESIZE)
 
 
 class NPC:
