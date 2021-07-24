@@ -21,9 +21,23 @@ def End_of_Box(endx, endy, color):
 
 def Look_around_more():
     font = pg.font.Font('Early GameBoy.ttf', 9)
-    text = font.render('Maybe you should look around some more', False, BLACK)
+    text = font.render('Maybe you should look around a bit more, its', False, BLACK)
+    text2 = font.render('been a while since you were awake.', False, BLACK)
     textRect = text.get_rect()
+    textRect2 = text2.get_rect()
     textRect.center = (12 * TILESIZE - 6, (13 * TILESIZE) - 8)
+    textRect2.center = (11 * TILESIZE - 14, (14 * TILESIZE) - 24)
+    text_box_background()
+    WINDOW.blit(text, textRect)
+    WINDOW.blit(text2, textRect2)
+
+    End_of_Box(15 * TILESIZE, (14 * TILESIZE) + 10, BLACK)
+
+def Room_Unavailable():
+    font = pg.font.Font('Early GameBoy.ttf', 9)
+    text = font.render('the door is locked.', False, BLACK)
+    textRect = text.get_rect()
+    textRect.center = (9 * TILESIZE - 12, (13 * TILESIZE) - 8)
     text_box_background()
     WINDOW.blit(text, textRect)
     End_of_Box(15 * TILESIZE, (14 * TILESIZE) + 10, BLACK)

@@ -1,6 +1,7 @@
 import pygame as pg
 import os, sys, time
 from Player_Objects import *
+from NPCs import *
 from Values import *
 from Rooms import *
 from Music import *
@@ -34,18 +35,18 @@ def main():
                 run = False
 
     #'''Waking up in my room'''
-        # My_Room_Music()
-        #WINDOW.fill(BLACK)
-        draw_grid()
-        My_Room()
-        #WINDOW.fill(WHITE)
+        #My_Room_Music()
+        #Atrium.draw_Atrium()
+        player.moving_rooms()
+        ruby.draw(WINDOW)
+        ruby.animations()
         player.movement_and_walk_animation()
-        player.location_my_room()
+        player.player_location()
         player.draw(WINDOW)
-        player.StartQuest_Title()
+        player.Sequences()
         player.game_text_boxes()
+        # draw_grid()
         pg.display.update()
-
 
     pg.quit()
     sys.exit()
