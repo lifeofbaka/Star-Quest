@@ -454,7 +454,7 @@ class NPC:
 
     def animations(self):
         if player.In_room2 == self.In_room_2:
-                print ('yes yes yes')
+                print ('both in room')
 ruby = NPC(7 * TILESIZE, 13 * TILESIZE)
 
 
