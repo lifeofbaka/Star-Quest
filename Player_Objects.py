@@ -3,7 +3,7 @@ import time
 from main import *
 from Values import *
 from Boxes import *
-from NPCs import *
+
 
 class Player:
     def __init__(self, x, y):
@@ -26,10 +26,10 @@ class Player:
         self.Title_Viewed = 0
         self.looked_around = False
         self.Unavailable_Room_Viewed = False
-        self.Box_Viewed = 3
+        self.Box_Viewed = 0
         self.Time_Elapsed = 0
-        self.In_room1 = False
-        self.In_room2 = True
+        self.In_room1 = True
+        self.In_room2 = False
         self.In_room3 = False
 
     def draw(self, WINDOW):
@@ -236,6 +236,28 @@ class Player:
                 elif self.y == 7 * TILESIZE:
                     self.player_up = False
 
+        if self.In_room2:
+            if self.x == 16 * TILESIZE and self.y >= 8 * TILESIZE and self.Box_Viewed == 3:
+                self.player_down = False
+                self.moves_disabled = True
+
+            if self.x == 16 * TILESIZE and self.Box_Viewed == 3:
+                self.moves_disabled = True
+                if self.moves_disabled and self.y != 11 * TILESIZE:
+                    time_to_walk = 20
+                    if self.Time_Elapsed > time_to_walk:
+                        self.y += Vel
+                        self.Time_Elapsed = 0
+                    else:
+                        self.Time_Elapsed += 1
+                elif self.y == 11 * TILESIZE:
+                    time_to_face = 15
+                    if time_to_face > self.Time_Elapsed:
+                        self.face_up, self.face_down, self.face_left, self.face_right = False, False, True, False
+                        self.Time_Elapsed = 0
+                    else:
+                        self.Time_Elapsed += 1
+
     def game_text_boxes(self):
 
         if self.In_room1:
@@ -254,7 +276,7 @@ class Player:
                 self.Box_Viewed = 3
                 self.Time_Elapsed = 0
 
-            if self.looked_around == True and self.Box_Viewed != 3:
+            if self.looked_around == True and self.Box_Viewed < 3:
                 if (self.x < 11 * TILESIZE or self.x > 12 * TILESIZE) and self.y == 15 * TILESIZE:
                     self.looked_around = False
                 elif self.y != 15 * TILESIZE:
@@ -301,11 +323,12 @@ class Player:
                     photo_of_alice()
                     if self.Time_Elapsed > time_to_next:
                         text_box_3()
-                    else: self.Time_Elapsed += 1
+                    else:
+                        self.Time_Elapsed += 1
                 else:
                     self.Time_Elapsed += 1
 
-            elif (self.x >= 11 * TILESIZE and self.x <= 12 * TILESIZE and self.y == 15 * TILESIZE) and self.Box_Viewed != 3:
+            elif (self.x >= 11 * TILESIZE and self.x <= 12 * TILESIZE and self.y == 15 * TILESIZE) and self.Box_Viewed < 3:
                 time_to_play = 60
                 time_to_face = 30
                 if self.looked_around == False:
@@ -322,9 +345,14 @@ class Player:
                             self.looked_around = True
                             self.Time_Elapsed = 0
                     else:
-                        self.Time_Elapsed = self.Time_Elapsed + 1
+                        self.Time_Elapsed += 1
 
         if self.In_room2:
+            if (self.x == 16 * TILESIZE and self.y == 11 * TILESIZE) and self.Box_Viewed == 3:
+                if ruby.rect.x == 15 * TILESIZE:
+                    text_box_4()
+                    if self.key_pressed[pg.K_RETURN]:
+                        self.Box_Viewed = 4
 
             if self.Unavailable_Room_Viewed == True:
                 if (self.x < 7 * TILESIZE or self.x > 9 * TILESIZE) and self.y == 9 * TILESIZE:
@@ -353,7 +381,7 @@ class Player:
                             self.Unavailable_Room_Viewed = True
                             self.Time_Elapsed = 0
                     else:
-                        self.Time_Elapsed = self.Time_Elapsed + 1
+                        self.Time_Elapsed += 1
 
             if (self.x >= 15 * TILESIZE and self.x <= 16 * TILESIZE) and self.y == 13 * TILESIZE and self.Box_Viewed >= 0:
                 time_to_play = 60
@@ -361,7 +389,6 @@ class Player:
                 if self.Unavailable_Room_Viewed == False:
                     self.moves_disabled = True
                     self.player_up, self.player_down, self.player_left, self.player_right = False, False, False, False
-
                     if self.Time_Elapsed > time_to_face:
                         self.face_left, self.face_right, self.face_up, self.face_down = False, False, False, True
                     else:
@@ -374,7 +401,7 @@ class Player:
                             self.Unavailable_Room_Viewed = True
                             self.Time_Elapsed = 0
                     else:
-                        self.Time_Elapsed = self.Time_Elapsed + 1
+                        self.Time_Elapsed += 1
 
     def room_location(self):
         if self.In_room1:
@@ -392,7 +419,7 @@ class Player:
             WINDOW.fill(BLACK)
             My_room.draw_My_Room()
             # Leaving room 1
-            if (self.x >= 11 * TILESIZE and self.x <= 12 * TILESIZE and self.y == 15 * TILESIZE) and self.Box_Viewed == 3 and self.face_down:
+            if (self.x >= 11 * TILESIZE and self.x <= 12 * TILESIZE and self.y == 15 * TILESIZE) and self.Box_Viewed >= 3 and self.face_down:
                 self.In_room2 = True
                 self.x = 16 * TILESIZE
                 self.y = 9 * TILESIZE
@@ -427,8 +454,10 @@ class Player:
                 self.y = 11 * TILESIZE
                 self.face_right = True
 
-        print(self.Unavailable_Room_Viewed)
-        print(self.x // TILESIZE, self.y // TILESIZE)
+        #print(self.Box_Viewed)
+        #print(self.In_room2)
+        #print(self.x // TILESIZE, self.y // TILESIZE)
+        print(self.Time_Elapsed)
 player = Player(4 * TILESIZE, 10 * TILESIZE)
 
 
@@ -447,15 +476,57 @@ class NPC:
         self.NPC_face_left = False
         self.NPC_face_right = False
         self.In_room_2 = True
+        self.Time_Elapsed = 0
 
 
     def draw(self, WINDOW):
-        pg.draw.rect(WINDOW, WHITE, self.rect)
+
+        Ruby_Walk_Left =[pg.image.load(os.path.join('Art', 'Player_left_2.png')),]
+        Ruby_Walk_Right = []
+        Ruby_Walk_Down = []
+        Ruby_Walk_Up = []
+
+        if player.In_room2 and player.x == 16 * TILESIZE and player.y == 11 * TILESIZE:
+            if self.In_room_2:
+                pg.draw.rect(WINDOW, WHITE, self.rect)
+        if self.rect.x == 4 * TILESIZE:
+            self.In_room_2 = False
+
 
     def animations(self):
-        if player.In_room2 == self.In_room_2:
-                print ('both in room')
+        if player.x == 16 * TILESIZE and player.y == 11 * TILESIZE and player.Box_Viewed == 3:
+            if self.rect.y > 11 * TILESIZE:
+                move_delay = 15
+                if self.Time_Elapsed > move_delay:
+                        self.rect.y -= Vel
+                        self.Time_Elapsed = 0
+                else:
+                    self.Time_Elapsed += 1
+            # Ruby Runs to Ren
+            elif self.rect.y == 11 * TILESIZE:
+                if self.rect.x < 15 * TILESIZE:
+                    move_delay = 5
+                    if self.Time_Elapsed > move_delay:
+                        self.rect.x += Vel
+                        self.Time_Elapsed = 0
+                    else:
+                        self.Time_Elapsed += 1
+
+        #Ruby Leaves West Hall and goes into Atrium
+        elif self.rect.x > 4 * TILESIZE and player.Box_Viewed == 4:
+                move_delay = 5
+                if self.Time_Elapsed > move_delay:
+                    self.rect.x -= Vel
+                    self.Time_Elapsed = 0
+                else:
+                    self.Time_Elapsed += 1
+        elif self.rect.x == 4 * TILESIZE and player.Box_Viewed == 4:
+            player.moves_disabled = False
+
+
+
 ruby = NPC(7 * TILESIZE, 13 * TILESIZE)
+
 
 
 

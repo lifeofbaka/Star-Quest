@@ -107,3 +107,17 @@ def text_box_3():
     WINDOW.blit(text2, textRect2)
     WINDOW.blit(text3, textRect3)
     End_of_Box(15 * TILESIZE, (14 * TILESIZE) + 10, BLACK)
+
+    # First Arrival of West Hall
+def text_box_4():
+    font = pg.font.Font('Early GameBoy.ttf', 9)
+    text = font.render('Ruby: Ren, Quickly!', False, BLACK)
+    text2 = font.render("something is happening at the Atrium!", False, BLACK)
+    textRect = text.get_rect()
+    textRect2 = text2.get_rect()
+    textRect.center = (9 * TILESIZE - 6, (13 * TILESIZE) - 8)
+    textRect2.center = (11 * TILESIZE + 2, (14 * TILESIZE) - 24)
+    text_box_background()
+    WINDOW.blit(text, textRect)
+    WINDOW.blit(text2, textRect2)
+    End_of_Box(15 * TILESIZE, (14 * TILESIZE) + 10, BLACK)
