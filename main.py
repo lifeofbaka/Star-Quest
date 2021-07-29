@@ -45,7 +45,7 @@ def main():
         player.draw(WINDOW)
         player.Sequences()
         player.game_text_boxes()
-        # draw_grid()
+        #draw_grid()
         pg.display.update()
 
     pg.quit()
